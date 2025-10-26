@@ -1,8 +1,9 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 import { CvData, TemplateName } from './types';
 import CvForm from './components/CvForm';
 import CvPreview from './components/CvPreview';
 import TemplateSelector from './components/TemplateSelector';
+import LandingPage from './components/LandingPage';
 
 const initialCvData: CvData = {
   personalInfo: {
@@ -38,6 +39,7 @@ const initialCvData: CvData = {
 const App: React.FC = () => {
   const [cvData, setCvData] = useState<CvData>(initialCvData);
   const [selectedTemplate, setSelectedTemplate] = useState<TemplateName>('executive');
+  const [view, setView] = useState<'landing' | 'editor'>('landing');
 
   const handlePrint = () => {
     window.print();
@@ -47,10 +49,20 @@ const App: React.FC = () => {
     setCvData(initialCvData);
   }, []);
 
+  if (view === 'landing') {
+    return <LandingPage onStart={() => setView('editor')} />;
+  }
+
   return (
     <div className="min-h-screen bg-slate-100 text-slate-800">
       <header className="no-print bg-white shadow-md p-4 flex justify-between items-center fixed top-0 left-0 right-0 z-20">
-        <h1 className="text-2xl font-bold text-indigo-600">AI CV Forge</h1>
+        <h1 
+            className="text-2xl font-bold text-indigo-600 cursor-pointer"
+            onClick={() => setView('landing')}
+            title="Back to Home"
+        >
+            AI CV Forge
+        </h1>
         <div className="flex items-center space-x-4">
           <button onClick={loadExample} className="bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold py-2 px-4 rounded-lg transition duration-300">
             Load Example
